@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Web Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="title">Support</div>
+
+        <!-- 不可编辑的对话框，用于显示消息 -->
+        <div class="dialogue-box" id="dialogue-box"></div>
+
+        <!-- 输入区域，包含 ">" 符号和输入框 -->
+        <div class="input-area">
+            <span class="input-prefix">></span>
+            <input type="text" id="user-input" placeholder="Type your questions..." onkeypress="handleKeyPress(event)">
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
