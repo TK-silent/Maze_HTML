@@ -19,7 +19,7 @@ body {
 .title {
     font-size: 20px;
     font-weight: bold;
-    color: #fff;
+    color: rgb(0, 255, 42);
     position: absolute;
     top: 10px;
     left: 10px;
@@ -81,3 +81,12 @@ body {
     border: 1px solid #001F3F;
     color: #fff;
 }
+
+.user-message {
+    color: white; /* 用户消息的颜色 */
+}
+
+.ai-response {
+    color: rgb(0, 255, 42); /* AI 消息的颜色 */
+}
+
