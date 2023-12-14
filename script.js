@@ -31,6 +31,12 @@ var keywordTriggerCount = {
     "关键词2_4": 0,
     "关键词3":0,
     "关键词4":0,
+    "DOOR":0,
+    "DOOR1_1":0,
+    "DOOR201":0,
+    "DOOR444":0,
+    "DOOR666":0,
+    "NG":0,
     // 添加更多关键词和初始计数（如果需要）
 };
 
@@ -44,8 +50,14 @@ var keywordPriority = {
     "关键词2_2_1_1": 0,
     "关键词2_3": 1,
     "关键词2_4": 1,
-    "关键词3":0,
-    "关键词4":0,
+    "关键词3":2,
+    "关键词4":2,
+    "DOOR":0,
+    "DOOR1_1":0,
+    "DOOR201":0,
+    "DOOR444":0,
+    "DOOR666":0,
+    "NG":0
     // 更多关键词及其优先级
 };
 
@@ -113,6 +125,24 @@ var keywordResponses = {
     ],
     "关键词4": [
         ["I’m the MAZE_ HELPER 😊"],
+    ],
+    "DOOR":[
+        ["WHO ARE U?"]
+    ],
+    "DOOR1_1":[
+        ["DEVELPER MODE ON"]
+    ],
+    "DOOR201":[
+        ["Door 201 is unlocked."]
+    ],
+    "DOOR444":[
+        ["<span style='color: red;'>THE DOOR IS UNLOCKED</span>"]
+    ],
+    "DOOR666":[
+        [""]
+    ],
+    "NG":[
+        ["Normal gravity mode on"]
     ]
 };
 
@@ -131,6 +161,12 @@ function processUserInput(userInput) {
     var keywordsForResponse2_4 = ['crap'];
     var keywordsForResponse3 = ['where'];
     var keywordsForResponse4 = ['who'];
+    var keywordsForResponseDOOR = ['open the locked door'];
+    var keywordsForResponseDOOR1_1 = ['your father'];
+    var keywordsForResponseDOOR201 = ['door 201'];
+    var keywordsForResponseDOOR444 = ['door 444'];
+    var keywordsForResponseDOOR666 = ['door 666'];
+    var keywordsForResponseDOORNG = ['Normal gravity'];
 
     // 存储被触发的关键词组及其优先级
     var triggeredKeywords = [];
@@ -203,6 +239,43 @@ function processUserInput(userInput) {
             triggeredKeywords.push({ keywordGroup: '关键词4', priority: keywordPriority['关键词4'] });
         }
     });
+
+    keywordsForResponseDOOR.forEach(keyword => {
+        if (userInput.includes(keyword)) {
+            triggeredKeywords.push({ keywordGroup: 'DOOR', priority: keywordPriority['DOOR'] });
+        }
+    });
+
+    keywordsForResponseDOOR1_1.forEach(keyword => {
+        if (userInput.includes(keyword) && keywordTriggerCount['DOOR'] > 0) {
+            triggeredKeywords.push({ keywordGroup: 'DOOR1_1', priority: keywordPriority['DOOR1_1'] });
+        }
+    });
+
+    keywordsForResponseDOOR201.forEach(keyword => {
+        if (userInput.includes(keyword) && keywordTriggerCount['DOOR'] > 0 && keywordTriggerCount['DOOR1_1'] > 0) {
+            triggeredKeywords.push({ keywordGroup: 'DOOR201', priority: keywordPriority['DOOR201'] });
+        }
+    });
+
+    keywordsForResponseDOOR444.forEach(keyword => {
+        if (userInput.includes(keyword) && keywordTriggerCount['DOOR'] > 0 && keywordTriggerCount['DOOR1_1'] > 0) {
+            triggeredKeywords.push({ keywordGroup: 'DOOR444', priority: keywordPriority['DOOR444'] });
+        }
+    });
+
+    keywordsForResponseDOOR666.forEach(keyword => {
+        if (userInput.includes(keyword) && keywordTriggerCount['DOOR'] > 0 && keywordTriggerCount['DOOR1_1'] > 0 && keywordTriggerCount['DOOR444'] > 0) {
+            triggeredKeywords.push({ keywordGroup: 'DOOR666', priority: keywordPriority['DOOR666'] });
+        }
+    });
+
+    keywordsForResponseDOORNG.forEach(keyword => {
+        if (userInput.includes(keyword)) {
+            triggeredKeywords.push({ keywordGroup: 'NG', priority: keywordPriority['NG'] });
+            websocket.send(JSON.stringify({ type: "changeGravity", objectName: "Square (1)", gravity: 1 }));
+        }
+    });
     console.log("Keyword trigger counts:", keywordTriggerCount);
 
     // 根据优先级排序被触发的关键词组
@@ -237,24 +310,59 @@ function handleKeywordResponse(keyword) {
         sendResponses(responses[count - 1]);
     } else {
         // 当触发次数超过定义的回复序列时的默认处理
-        sendResponses(['']);
+        sendResponses(['?']);
     }
 }
+
+function displayTextByCharacter(text, index, responseElement) {
+    if (index < text.length) {
+        responseElement.innerHTML += text.charAt(index); // 逐字更新文本内容
+        scrollToBottom();
+
+        setTimeout(function() {
+            displayTextByCharacter(text, index + 1, responseElement);
+        }, 25); // 每个字符显示的延迟时间，与 sendResponses 中的 charDelay 一致
+    }
+}
+
 
 function sendResponses(responses) {
     var totalDelay = 0;
 
     responses.forEach(response => {
         // 生成 1 到 3 秒之间的随机延迟
-        var delay = 1000 + Math.random() * 2000;
-        totalDelay += delay;
+        var initialDelay = 1000 + Math.random() * 2000;
+        // 每个字符显示的延迟时间，例如 50 毫秒
+        var charDelay = 25;
+        // 计算显示整个文本所需的总时间
+        var textDisplayTime = response.length * charDelay;
+
+        totalDelay += initialDelay;
 
         setTimeout(function() {
-            displayAiResponse(response);
-            scrollToBottom();
+            var responseElement = displayAiResponse(); // 创建新的响应元素
+            displayTextByCharacter(response, 0, responseElement); // 开始逐字显示
         }, totalDelay);
+
+        // 更新总延迟时间，包括显示当前文本的时间
+        totalDelay += textDisplayTime;
     });
 }
+
+
+
+function getOrCreateResponseElement() {
+    // 假设您的回复显示在一个元素中，这里用 'response' 作为其 ID
+    var responseElement = document.getElementById('response');
+    if (!responseElement) {
+        // 如果元素不存在，则创建它
+        responseElement = document.createElement('div');
+        responseElement.id = 'response';
+        document.body.appendChild(responseElement); // 假设直接添加到 body，您可以根据需要调整
+    }
+    return responseElement;
+}
+
 
 
 function displayUserInput(userMessage) {
@@ -262,10 +370,15 @@ function displayUserInput(userMessage) {
     dialogueBox.innerHTML += `<p class="user-message"><strong>&gt; YOU:</strong> ${userMessage}</p>`;
 }
 
-function displayAiResponse(aiResponse) {
+function displayAiResponse() {
     var dialogueBox = document.getElementById('dialogue-box');
-    dialogueBox.innerHTML += `<p class="ai-response"><strong>&gt; MAZE_HELPER:</strong> ${aiResponse}</p>`;
+    var responseElement = document.createElement("p");
+    responseElement.className = "ai-response";
+    responseElement.innerHTML = `<strong>&gt; MAZE_HELPER:</strong> `;
+    dialogueBox.appendChild(responseElement);
+    return responseElement; // 返回新创建的元素
 }
+
 
 function scrollToBottom() {
     var dialogueBox = document.getElementById('dialogue-box');

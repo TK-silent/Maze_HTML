@@ -1,12 +1,50 @@
 body {
-    font-family: 'Courier New', monospace;
+    /* 设置背景图像 */
+    background-image: url('noise.gif');
+
+    /* 使背景图像填满整个页面 */
+    background-size: cover;
+
+    /* 背景图像不随网页滚动而滚动 */
+    background-attachment: fixed;
+
+    /* 确保背景图像不会重复 */
+    background-repeat: no-repeat;
+
+    /* 背景图像居中对齐 */
+    background-position: center center;
+
+    /* 可选：设置网页内容的最小高度为视口的高度 */
+    min-height: 100vh;
+    font-family: 'MS Reference Sans Serif', monospace;
+    line-height: 1.5;
+    letter-spacing: 1px;
+    display: grid;
+    place-items: center; /* 水平和垂直居中 */
     margin: 0;
     padding: 0;
     background-color: #b8b8b8;
 }
 
+.gif-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3; /* 确保GIF位于内容之上 */
+    pointer-events: none; /* 关键点：允许鼠标事件“穿透”这个层 */
+}
+
+.gif-overlay img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 根据需要调整 */
+    opacity: 0.5;
+}
+
 .container {
-    max-width: 650px;
+    max-width: 850px;
     margin: 50px auto;
     padding: 20px;
     background-color: #000;
@@ -24,10 +62,13 @@ body {
     top: 10px;
     left: 10px;
     margin-left: 10px;
+    z-index: 5;
+    opacity: 0.85;
 }
 
 .dialogue-box {
-    height: 200px;
+    height: 300px;
+    width: 800px;
     overflow-y: scroll;
     padding: 10px;
     border: 1px solid #001F3F;
@@ -82,6 +123,12 @@ body {
     color: #fff;
 }
 
+.user-message, .ai-response {
+    position: relative; /* 必须设置 position 属性来使 z-index 生效 */
+    z-index: 5; /* 比 GIF 覆盖层高的 z-index */
+    opacity: 0.85;
+}
+
 .user-message {
     color: white; /* 用户消息的颜色 */
 }
@@ -89,4 +136,5 @@ body {
 .ai-response {
     color: rgb(0, 255, 42); /* AI 消息的颜色 */
 }
+
 
