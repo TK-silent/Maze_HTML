@@ -16,9 +16,10 @@ body {
 
     /* 可选：设置网页内容的最小高度为视口的高度 */
     min-height: 100vh;
-    font-family: 'MS Reference Sans Serif', monospace;
-    line-height: 1.5;
-    letter-spacing: 1px;
+    font-family: 'Press Start 2P', monospace;
+    line-height: 1.7;
+    letter-spacing: 0.2px;
+    font-size: 0.8em;
     display: grid;
     place-items: center; /* 水平和垂直居中 */
     margin: 0;

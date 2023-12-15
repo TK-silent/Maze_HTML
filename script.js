@@ -1,3 +1,6 @@
+// 初始化 WebSocket 连接
+const websocket = new WebSocket('wss://websocket-t.onrender.com');
+
 function handleKeyPress(event) {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -50,14 +53,14 @@ var keywordPriority = {
     "关键词2_2_1_1": 0,
     "关键词2_3": 1,
     "关键词2_4": 1,
-    "关键词3":2,
-    "关键词4":2,
+    "关键词3":3,
+    "关键词4":3,
     "DOOR":0,
     "DOOR1_1":0,
     "DOOR201":0,
     "DOOR444":0,
     "DOOR666":0,
-    "NG":0
+    "NG":0,
     // 更多关键词及其优先级
 };
 
@@ -142,8 +145,8 @@ var keywordResponses = {
         [""]
     ],
     "NG":[
-        ["Normal gravity mode on"]
-    ]
+        ["Normal Gravity mode on"]
+    ],
 };
 
 function processUserInput(userInput) {
@@ -166,7 +169,7 @@ function processUserInput(userInput) {
     var keywordsForResponseDOOR201 = ['door 201'];
     var keywordsForResponseDOOR444 = ['door 444'];
     var keywordsForResponseDOOR666 = ['door 666'];
-    var keywordsForResponseDOORNG = ['Normal gravity'];
+    var keywordsForResponseNG = ['ng'];
 
     // 存储被触发的关键词组及其优先级
     var triggeredKeywords = [];
@@ -237,6 +240,7 @@ function processUserInput(userInput) {
     keywordsForResponse4.forEach(keyword => {
         if (userInput.includes(keyword)) {
             triggeredKeywords.push({ keywordGroup: '关键词4', priority: keywordPriority['关键词4'] });
+            websocket.send(JSON.stringify({ type: "changeGravity", objectName: "TK", gravity: 1 }));
         }
     });
 
@@ -270,12 +274,13 @@ function processUserInput(userInput) {
         }
     });
 
-    keywordsForResponseDOORNG.forEach(keyword => {
+    keywordsForResponseNG.forEach(keyword => {
         if (userInput.includes(keyword)) {
             triggeredKeywords.push({ keywordGroup: 'NG', priority: keywordPriority['NG'] });
-            websocket.send(JSON.stringify({ type: "changeGravity", objectName: "Square (1)", gravity: 1 }));
+            websocket.send(JSON.stringify({ type: "changeGravity", objectName: "TK", gravity: 1 }));
         }
     });
+
     console.log("Keyword trigger counts:", keywordTriggerCount);
 
     // 根据优先级排序被触发的关键词组

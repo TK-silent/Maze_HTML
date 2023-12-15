@@ -2,7 +2,7 @@ var ws;
 
         function connectWebSocket() {
             // 替换为您的 WebSocket 服务器地址
-            ws = new WebSocket('wss://websocket-qxuo.onrender.com');
+            ws = new WebSocket('wss://websocket-t.onrender.com');
 
             ws.onopen = function() {
                 console.log('Connected to WebSocket server');
