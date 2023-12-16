@@ -277,7 +277,7 @@ function processUserInput(userInput) {
     keywordsForResponseNG.forEach(keyword => {
         if (userInput.includes(keyword)) {
             triggeredKeywords.push({ keywordGroup: 'NG', priority: keywordPriority['NG'] });
-            websocket.send(JSON.stringify({ type: "changeGravity", objectName: "TK", gravity: 1 }));
+            websocket.send(JSON.stringify({ type: "changeGravity", objectName: "Blue", gravity: 1 }));
         }
     });
 
