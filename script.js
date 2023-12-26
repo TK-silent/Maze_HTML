@@ -178,7 +178,7 @@ function processUserInput(userInput) {
     keywordsForResponse1.forEach(keyword => {
         if (userInput.includes(keyword)) {
             triggeredKeywords.push({ keywordGroup: '关键词1', priority: keywordPriority['关键词1'] });
-            websocket.send(JSON.stringify({ type: "clearTileAction" }));
+            websocket.send(JSON.stringify({ type: "triggerDialogue", nodeID: 4 }));
         }
     });
 
@@ -248,18 +248,21 @@ function processUserInput(userInput) {
     keywordsForResponseDOOR.forEach(keyword => {
         if (userInput.includes(keyword)) {
             triggeredKeywords.push({ keywordGroup: 'DOOR', priority: keywordPriority['DOOR'] });
+            websocket.send(JSON.stringify({ type: "triggerDialogue", nodeID: 5 }));
         }
     });
 
     keywordsForResponseDOOR1_1.forEach(keyword => {
         if (userInput.includes(keyword) && keywordTriggerCount['DOOR'] > 0) {
             triggeredKeywords.push({ keywordGroup: 'DOOR1_1', priority: keywordPriority['DOOR1_1'] });
+            websocket.send(JSON.stringify({ type: "triggerDialogue", nodeID: 6 }));
         }
     });
 
     keywordsForResponseDOOR201.forEach(keyword => {
         if (userInput.includes(keyword) && keywordTriggerCount['DOOR'] > 0 && keywordTriggerCount['DOOR1_1'] > 0) {
             triggeredKeywords.push({ keywordGroup: 'DOOR201', priority: keywordPriority['DOOR201'] });
+            websocket.send(JSON.stringify({ type: "clearTileAction" }));
         }
     });
 
