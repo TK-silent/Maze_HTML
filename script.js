@@ -178,6 +178,7 @@ function processUserInput(userInput) {
     keywordsForResponse1.forEach(keyword => {
         if (userInput.includes(keyword)) {
             triggeredKeywords.push({ keywordGroup: '关键词1', priority: keywordPriority['关键词1'] });
+            websocket.send(JSON.stringify({ type: "clearTileAction" }));
         }
     });
 
@@ -299,7 +300,7 @@ function processUserInput(userInput) {
         handleKeywordResponse(selectedKeyword);
     } else {
         // 默认回复
-        sendResponses(["......"]);
+        sendResponses(["... ..."]);
     }
 }
 
