@@ -1,4 +1,3 @@
-// 初始化 WebSocket 连接
 const websocket = new WebSocket('wss://websocket-t.onrender.com');
 
 function handleKeyPress(event) {
@@ -9,19 +8,18 @@ function handleKeyPress(event) {
         var userInput = userInputField.value;
 
         if (userInput.trim() !== "") {
-            // 处理用户输入
+            // Processing user input
             processUserInput(userInput);
 
-            // 显示用户输入
+            // Display user input
             displayUserInput(userInput);
 
-            // 清空输入框
+            // Clean user input
             userInputField.value = "";
         }
     }
 }
 
-// 用于跟踪关键词触发次数的对象
 var keywordTriggerCount = {
     "关键词1": 0,
     "关键词1_1":0,
@@ -64,8 +62,6 @@ var keywordPriority = {
     // 更多关键词及其优先级
 };
 
-
-// 为每个关键词定义回复序列
 var keywordResponses = {
     "关键词1": [
         ["Hi! I’m the MAZE_ HELPER","What can I help you? 😊"],
@@ -152,7 +148,7 @@ var keywordResponses = {
 function processUserInput(userInput) {
     userInput = userInput.toLowerCase();
 
-    // 定义可以触发关键词回复的关键词列表
+    // Keywords
     var keywordsForResponse1 = ['hello', 'hi', 'you', 'help', '?','lost','helper'];
     var keywordsForResponse1_1 = ['hello', 'hi', 'you', 'help', '?','lost','helper'];
     var keywordsForResponse2 = ['escape', 'out', 'exit'];
@@ -171,10 +167,8 @@ function processUserInput(userInput) {
     var keywordsForResponseDOOR666 = ['door 666'];
     var keywordsForResponseNG = ['ng'];
 
-    // 存储被触发的关键词组及其优先级
     var triggeredKeywords = [];
 
-    // 检查关键词组1是否被触发
     keywordsForResponse1.forEach(keyword => {
         if (userInput.includes(keyword)) {
             triggeredKeywords.push({ keywordGroup: '关键词1', priority: keywordPriority['关键词1'] });
@@ -287,28 +281,25 @@ function processUserInput(userInput) {
 
     console.log("Keyword trigger counts:", keywordTriggerCount);
 
-    // 根据优先级排序被触发的关键词组
+    // Sort triggered keyword groups by priority
     triggeredKeywords.sort((a, b) => a.priority - b.priority);
 
-    // 选择优先级最高的关键词组进行回应
+    // Select the keyword group with the highest priority for response
     if (triggeredKeywords.length > 0) {
-        // 找出所有最高优先级的关键词组
+        // Find all keyword groups with the highest priority
         var highestPriority = triggeredKeywords[0].priority;
         var highestPriorityKeywords = triggeredKeywords.filter(keyword => keyword.priority === highestPriority);
         console.log("Highest priority keywords:", highestPriorityKeywords);
 
-        // 从最高优先级的关键词组中随机选择一个
+        // Randomly select one from the keyword groups with the highest priority
         var selectedKeyword = highestPriorityKeywords[Math.floor(Math.random() * highestPriorityKeywords.length)].keywordGroup;
         console.log("Selected keyword for response:", selectedKeyword);
         handleKeywordResponse(selectedKeyword);
     } else {
-        // 默认回复
+        // Default response
         sendResponses(["... ..."]);
     }
 }
-
-
-
 
 function handleKeywordResponse(keyword) {
     keywordTriggerCount[keyword]++;
